@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Filters from "./Filters";
 import PetBrowser from "./PetBrowser";
+import data from "../db.json"
 
 function App() {
   const [pets, setPets] = useState([]);
@@ -11,20 +12,10 @@ function App() {
   };
 
   const handleFindPetsClick = () => {
-    let url = "http://localhost:3000/pets";
-
-    if (filters.type !== "all") {
-      url += `?type=${filters.type}`;
-    }
-
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        setPets(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching pets:", error);
-      });
+    const filteredPets = filters.type === "all" 
+      ? data.pets 
+      : data.pets.filter(pet => pet.type === filters.type);
+    setPets(filteredPets);
   };
 
   const handleAdoptPet = (id) => {
